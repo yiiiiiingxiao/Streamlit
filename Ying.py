@@ -18,7 +18,6 @@ Created on Mon Oct 16 14:34:43 2023
 # Libraries
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import yfinance as yf
@@ -249,12 +248,10 @@ def render_tab1():
             stock_info = selected_stock.history(period="max", interval="1d")
         
         # Display stock information
-        fig, ax = sns.subplots()
-        ax.plot(stock_info.index, stock_info['Close'])
-        ax.set_title(f"Stock Price Chart ({time_duration})")
-        ax.set_xlabel('Date')
-        ax.set_ylabel('Stock Price (USD)')
-        st.pyplot(fig)
+        fig=go.Figure()
+        fig.add_trace(go.Scatter(x=stock_info.index, y=stock_info['Close'], mode='lines', name='Close Price'))
+        fig.update_layout(title_text="Stock Price Chart ("+time_duration+")", xaxis_title='Date', yaxis_title='Stock Price (USD)')
+        st.plotly_chart(fig, use_container_width=True)
         
     # Call the function
     GetStockSummary(selected_ticker, time_duration)
